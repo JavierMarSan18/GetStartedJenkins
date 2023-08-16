@@ -1,40 +1,36 @@
-pipeline {
-    agent any
+import groovy.json.JsonSlurperClassic
 
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-        stage('Build') {
-            steps {
-                script {
-                    sh 'npm install'
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                script {
-                    sh 'npm test'
-                }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                script {
-                    // Aquí podrías implementar el despliegue a un servidor web o un servicio de hosting
-                    echo 'Deploying to production...'
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            // Limpia cualquier recurso temporal creado durante el proceso
-            deleteDir()
-        }
-    }
+def jsonParse(def json) {
+    new groovy.json.JsonSlurperClassic().parseText(json)
 }
+pipeline {
+  agent { label 'principal' }
+  environment {
+    appName = "variable" 
+  }
+  stages {
+
+ stage("paso 1"){
+     
+      steps {
+          script {			
+           sh "echo 'hola mundo'"
+        }
+      }
+    }
+  }
+  post {
+      always {          
+          deleteDir()
+           sh "echo 'fase always'"
+      }
+      success {
+            sh "echo 'fase success'"
+        }
+
+      failure {
+            sh "echo 'fase failure'"
+      }
+      
+  }
+}  
